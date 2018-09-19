@@ -1,11 +1,20 @@
 require 'rubygems'
 require 'json'
+
+userServiceName = ENV['PX_CONFIG_USER_SERVICE_NAME']
+
 parsed_vcap_services=JSON.parse(ENV['VCAP_SERVICES'])
 parsed_vcap_services.each do |key, array|
 	array.each do |serviceMap|
 		serviceMap["credentials"].each do |index,value|
 			if !(value.class.method_defined? :flatten)
 				print "export vcap_service_"+serviceMap["name"].gsub(/[^0-9a-z_ ]/i, '')+"_"+index+"="+value.to_s+"\n"
+
+				if serviceMap['name'] == userServiceName 
+					if !(ENV.has_key? index)
+						print "export "+index+"="+value.to_s+"\n"
+					end
+				end				
 			end
 		end
 	end

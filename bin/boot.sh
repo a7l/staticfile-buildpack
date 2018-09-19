@@ -12,10 +12,21 @@
 # and  limitations under the License.
 # ------------------------------------------------------------------------------------------------
 
+if [ ! -z "$DEBUG" ]; then 
+	set -x
+	echo "Service ENV:"
+	env
+fi
+
 export APP_ROOT=$HOME
 export LD_LIBRARY_PATH=$APP_ROOT/openresty/lib:$LD_LIBRARY_PATH
 
 $(ruby get_env)
+
+if [ ! -z "$DEBUG" ]; then 
+	echo "Service ENV (after set):"
+	env
+fi
 
 if [ -d .nginx-nr-agent ]
 	then
